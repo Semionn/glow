@@ -6,7 +6,6 @@ import os
 import sys
 import time
 
-import horovod.tensorflow as hvd
 import numpy as np
 import tensorflow as tf
 import graphics
@@ -16,6 +15,22 @@ learn = tf.contrib.learn
 
 # Surpress verbose warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+
+class HorovodMock(object):
+    def rank(self):
+        return 0
+
+    def local_rank(self):
+        return 0
+
+    def size(self):
+        return 1
+
+    def init(self):
+        pass
+
+hvd = HorovodMock()
 
 
 def _print(*args, **kwargs):

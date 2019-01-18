@@ -1,6 +1,21 @@
 import tensorflow as tf
 import tfops as Z
-import horovod.tensorflow as hvd
+
+
+class HorovodMock(object):
+    def rank(self):
+        return 0
+
+    def local_rank(self):
+        return 0
+
+    def size(self):
+        return 1
+
+    def init(self):
+        pass
+
+hvd = HorovodMock()
 
 # Optimizers
 

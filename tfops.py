@@ -2,7 +2,32 @@ import tensorflow as tf
 from tensorflow.contrib.framework.python.ops import add_arg_scope, arg_scope
 from tensorflow.contrib.layers import variance_scaling_initializer
 import numpy as np
-import horovod.tensorflow as hvd
+
+
+class MPIOps(object):
+    def _allreduce(self, x):
+        ## TODO: is it correct?
+        return x
+
+
+class HorovodMock(object):
+    def rank(self):
+        return 0
+
+    def local_rank(self):
+        return 0
+
+    def size(self):
+        return 1
+
+    def init(self):
+        pass
+
+    @property
+    def mpi_ops(self):
+        return
+
+hvd = HorovodMock()
 
 # Debugging function
 do_print_act_stats = True
