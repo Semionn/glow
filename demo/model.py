@@ -121,7 +121,7 @@ for tag in scale_tags:
     i = _TAGS.index(tag)
     z_manipulate[i] = 1.2*z_manipulate[i]
 
-z_sq_norms = np.sum(z_manipulate**2, axis=-1, keepdims=True)
+z_sq_norms = np.sum(z_manipulate**2, axis=-1, keep_dims=True)
 z_proj = (z_manipulate / z_sq_norms).T
 
 

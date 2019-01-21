@@ -120,11 +120,11 @@ def actnorm_center(name, x, reverse=False):
     with tf.variable_scope(name):
         assert len(shape) == 2 or len(shape) == 4
         if len(shape) == 2:
-            x_mean = tf.reduce_mean(x, [0], keepdims=True)
+            x_mean = tf.reduce_mean(x, [0], keep_dims=True)
             b = get_variable_ddi(
                 "b", (1, int_shape(x)[1]), initial_value=-x_mean)
         elif len(shape) == 4:
-            x_mean = tf.reduce_mean(x, [0, 1, 2], keepdims=True)
+            x_mean = tf.reduce_mean(x, [0, 1, 2], keep_dims=True)
             b = get_variable_ddi(
                 "b", (1, 1, 1, int_shape(x)[3]), initial_value=-x_mean)
 
@@ -144,17 +144,17 @@ def actnorm_scale(name, x, scale=1., logdet=None, logscale_factor=3., batch_vari
     with tf.variable_scope(name), arg_scope([get_variable_ddi], trainable=trainable):
         assert len(shape) == 2 or len(shape) == 4
         if len(shape) == 2:
-            x_var = tf.reduce_mean(x**2, [0], keepdims=True)
+            x_var = tf.reduce_mean(x**2, [0], keep_dims=True)
             logdet_factor = 1
             _shape = (1, int_shape(x)[1])
 
         elif len(shape) == 4:
-            x_var = tf.reduce_mean(x**2, [0, 1, 2], keepdims=True)
+            x_var = tf.reduce_mean(x**2, [0, 1, 2], keep_dims=True)
             logdet_factor = int(shape[1])*int(shape[2])
             _shape = (1, 1, 1, int_shape(x)[3])
 
         if batch_variance:
-            x_var = tf.reduce_mean(x**2, keepdims=True)
+            x_var = tf.reduce_mean(x**2, keep_dims=True)
 
         if init and False:
             # MPI all-reduce
