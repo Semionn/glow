@@ -167,13 +167,13 @@ def dump_celebahq(data_dir, tfrecord_dir, max_res, split, write):
         print("Reading data from ", data_dir)
         if split:
             tfr_files = get_tfr_files(data_dir, split, int(np.log2(max_res)))
-            files = tf.data.Dataset.list_files(tfr_files)
+            files = tf.contrib.data.Dataset.list_files(tfr_files)
             dset = files.apply(tf.contrib.data.parallel_interleave(
-                tf.data.TFRecordDataset, cycle_length=_NUM_PARALLEL_FILE_READERS))
+                tf.contrib.data.TFRecordDataset, cycle_length=_NUM_PARALLEL_FILE_READERS))
             transpose = False
         else:
             tfr_file = get_tfr_file(data_dir, "", int(np.log2(max_res)))
-            dset = tf.data.TFRecordDataset(tfr_file, compression_type='')
+            dset = tf.contrib.data.TFRecordDataset(tfr_file, compression_type='')
             transpose = True
 
         parse_fn = parse_celeba_image(max_res, transpose)
@@ -215,16 +215,16 @@ def dump_imagenet(data_dir, tfrecord_dir, max_res, split, write):
     with tf.Session() as sess:
         is_training = (split == 'train')
         if is_training:
-            files = tf.data.Dataset.list_files(
+            files = tf.contrib.data.Dataset.list_files(
                 os.path.join(data_dir, 'train-*-of-01024'))
         else:
-            files = tf.data.Dataset.list_files(
+            files = tf.contrib.data.Dataset.list_files(
                 os.path.join(data_dir, 'validation-*-of-00128'))
 
         files = files.shuffle(buffer_size=_NUM_FILES[split])
 
         dataset = files.apply(tf.contrib.data.parallel_interleave(
-            tf.data.TFRecordDataset, cycle_length=_NUM_PARALLEL_FILE_READERS))
+            tf.contrib.data.TFRecordDataset, cycle_length=_NUM_PARALLEL_FILE_READERS))
 
         dataset = dataset.shuffle(buffer_size=_SHUFFLE_BUFFER)
         parse_fn = parse_image(max_res)

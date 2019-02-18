@@ -26,7 +26,7 @@ def parse_tfrecord_tf(record, res, rnd_crop):
 
 
 def input_fn(tfr_file, shards, rank, pmap, fmap, n_batch, resolution, rnd_crop, is_training):
-    files = tf.data.Dataset.list_files(tfr_file)
+    files = tf.contrib.data.Dataset.list_files(tfr_file)
     if ('lsun' not in tfr_file) or is_training:
         # For 'lsun' validation, only one shard and each machine goes over the full dataset
         # each worker works on a subset of the data
@@ -35,7 +35,7 @@ def input_fn(tfr_file, shards, rank, pmap, fmap, n_batch, resolution, rnd_crop, 
         # shuffle order of files in shard
         files = files.shuffle(buffer_size=_FILES_SHUFFLE)
     dset = files.apply(tf.contrib.data.parallel_interleave(
-        tf.data.TFRecordDataset, cycle_length=fmap))
+        tf.contrib.data.TFRecordDataset, cycle_length=fmap))
     if is_training:
         dset = dset.shuffle(buffer_size=n_batch * _SHUFFLE_FACTOR)
     dset = dset.repeat()
